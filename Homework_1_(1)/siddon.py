@@ -43,33 +43,6 @@ def get_projected_values(cp_sorted, mat_contents=None):
     """
     计算相邻两点距离，两点所占方格的值
     """
-    #point_num = np.shape(cp_sorted)[0]
-    #distance = []
-    #values = []
-    #for i in range(point_num-1):
-        # 取出两相邻点
-    #    x1 = cp_sorted[i, 0]
-    #    x2 = cp_sorted[i+1, 0]
-    #    y1 = cp_sorted[i, 1]
-    #    y2 = cp_sorted[i+1, 1]
-        # 计算两相邻点距离
-    #    dis = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
-    #    distance.append(dis)
-        # 确定两相邻点所在方格
-    #    n1 = int((x1+10)/(5/64))
-    #    m1 = int((y1-10)/(-5/64))
-    #    n2 = int((x2+10)/(5/64))
-    #    m2 = int((y2-10)/(-5/64))
-    #    m = min(m1, m2)
-    #    n = min(n1, n2)
-        # 获取方格的值
-    #    value = mat_contents[m, n]
-    #    values.append(value)
-    #ndistance = np.array(distance)
-    #nvalues = np.array(values)
-    # 根据siddon方法计算投影值
-    #projected_value = np.sum(distance * nvalues)
-    #return projected_value
     cp_sorted = np.array(cp_sorted)
     # get two closed points
     fstpoint = cp_sorted[:-1, :]
