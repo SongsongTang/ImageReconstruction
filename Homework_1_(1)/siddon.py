@@ -39,38 +39,56 @@ def get_cross_coordinates(alpha, beta):
     cp_sorted = cp[cp[:,0].argsort()]
     return cp_sorted
 
-def get_projected_values(cp_sorted, mat_contents):
+def get_projected_values(cp_sorted, mat_contents=None):
     """
     计算相邻两点距离，两点所占方格的值
     """
-    point_num = np.shape(cp_sorted)[0]
-    distance = []
-    values = []
-    for i in range(point_num-1):
+    #point_num = np.shape(cp_sorted)[0]
+    #distance = []
+    #values = []
+    #for i in range(point_num-1):
         # 取出两相邻点
-        x1 = cp_sorted[i, 0]
-        x2 = cp_sorted[i+1, 0]
-        y1 = cp_sorted[i, 1]
-        y2 = cp_sorted[i+1, 1]
+    #    x1 = cp_sorted[i, 0]
+    #    x2 = cp_sorted[i+1, 0]
+    #    y1 = cp_sorted[i, 1]
+    #    y2 = cp_sorted[i+1, 1]
         # 计算两相邻点距离
-        dis = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
-        distance.append(dis)
+    #    dis = ((x1 - x2)**2 + (y1 - y2)**2)**(1/2)
+    #    distance.append(dis)
         # 确定两相邻点所在方格
-        n1 = int((x1+10)/(5/64))
-        m1 = int((y1-10)/(-5/64))
-        n2 = int((x2+10)/(5/64))
-        m2 = int((y2-10)/(-5/64))
-        m = min(m1, m2)
-        n = min(n1, n2)
+    #    n1 = int((x1+10)/(5/64))
+    #    m1 = int((y1-10)/(-5/64))
+    #    n2 = int((x2+10)/(5/64))
+    #    m2 = int((y2-10)/(-5/64))
+    #    m = min(m1, m2)
+    #    n = min(n1, n2)
         # 获取方格的值
-        value = mat_contents[m, n]
-        values.append(value)
-    ndistance = np.array(distance)
-    nvalues = np.array(values)
+    #    value = mat_contents[m, n]
+    #    values.append(value)
+    #ndistance = np.array(distance)
+    #nvalues = np.array(values)
     # 根据siddon方法计算投影值
-    projected_value = np.sum(distance * nvalues)
-    return projected_value
-
+    #projected_value = np.sum(distance * nvalues)
+    #return projected_value
+    cp_sorted = np.array(cp_sorted)
+    # get two closed points
+    fstpoint = cp_sorted[:-1, :]
+    secpoint = cp_sorted[1: , :]
+    # calculate distance
+    difference = (secpoint - fstpoint) ** 2
+    distance = (difference[:, 0] + difference[:, 1]) ** (1/2)
+    # determine the value
+    point_x = np.array([fstpoint[:, 0], secpoint[:, 0]]).transpose()
+    point_y = np.array([fstpoint[:, 1], secpoint[:, 1]]).transpose()
+    n = np.min(((point_x + 10) / (5/64)).astype(int), axis=1)
+    m = np.min(((point_y - 10) / (-5/64)).astype(int), axis=1)
+    if type(mat_contents) != type(None):
+        mat_contents = np.array(mat_contents)
+        values = mat_contents[m, n]
+        projected_value = np.sum(distance * values)
+        return projected_value
+    else:
+        return m, n, distance
 def main():
     # 加载Shepp_logan模型
     mat_fname = 'Shepp_logan.mat'
