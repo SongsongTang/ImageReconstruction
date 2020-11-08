@@ -39,8 +39,8 @@ def main():
     # 每个像素大小
     pixel = 20/256
     # 获取x， y， β数组
-    x_array = np.linspace(-10, 10 - pixel, 256)
-    y_array = np.linspace(-10 + pixel, 10, 256)[:, np.newaxis]
+    x_array = np.linspace(-10 + pixel/2, 10 - pixel/2, 256)
+    y_array = np.linspace(-10 + pixel/2, 10 - pixel/2, 256)[:, np.newaxis]
     beta_array = np.arange(0, 2 * np.pi, np.pi / 180)
     # 设置R为60
     R = 60
@@ -55,7 +55,7 @@ def main():
     a_array = ai * 0.08
     # 对投影值进行加权
     pwd = true_contents * R / (R**2+a_array **2)**(1/2)
-    pwd = proj_contents * R / (R**2+a_array **2)**(1/2)
+    #pwd = proj_contents * R / (R**2+a_array **2)**(1/2)
     # 将投影值与滤波器卷积
     conv = convolve2D(pwd, h)
     # 初始化头模型数组
@@ -67,7 +67,7 @@ def main():
         # 计算a
         a = R/U*(-x_array*np.sin(beta)+y_array*np.cos(beta))
         # 将不在探测器位置的a值向下取到探测器位置，并将y以x轴镜像
-        a_fit = np.array((((a-0.04) // T) * T + 0.04)[::-1, :])
+        a_fit = np.array((np.around((a-0.04) / T) * T + 0.04)[::-1, :])
         # 将探测器位置之外的a值取到探测器上
         a_fit[a_fit > 11.96] = 11.96
         a_fit[a_fit < -11.96] = -11.96
